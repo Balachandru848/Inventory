@@ -11,7 +11,7 @@ import {createBrowserRouter,RouterProvider} from "react-router-dom";
 import Customerbills from './Components/Customerbills'
 import Purchase from'./Pages/Purchase'
 import Settings from './Pages/Settings'
-import Login from './Pages/login'
+import Login from './Pages/Login'
 
 const router = createBrowserRouter([
         {
