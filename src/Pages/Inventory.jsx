@@ -19,8 +19,32 @@ function Inventory() {
   const [editName,seteditName] = useState("")
   const [editCategory,seteditCategory] = useState("")
   const [editQuantity,seteditQuantity] = useState(0)
+  const [currentcategory,setcurrentcategory] = useState("all")
+  const [search,setsearch] = useState("")
+
+  const test = (pro)=>{
+    if(search === ""){
+      if(currentcategory === "all"){
+        return true
+      }else if(currentcategory === pro.Category){
+        return true
+      }else{
+        return false
+      }
+    }
+    if((JSON.stringify(Object.values(pro)).toLowerCase()).includes(search.toLowerCase())){
+      return true
+       console.log(33,true)
+    }else{
+      return false
+    }
+  }
+  
+  
+ 
+  
   let category = []
-  console.log(inputarr);
+  // console.log(inputarr);
   const add = () =>{
     setadditem(!additem)
   }
@@ -81,7 +105,8 @@ function Inventory() {
     setinputarr(arr)
   }
   
-
+  // console.log(search);
+  
   return (
     <div className='pb-2 border-2 border-slate-200 rounded-2xl p-1 shadow-xl'>
       <Header/>
@@ -119,10 +144,10 @@ function Inventory() {
       </div>
       <div className='flex flex-col mx-4 border-2 border-slate-200 p-2  bg-slate-200 rounded-2xl'>
         <div className='flex items-center  rounded-2xl px-2'>
-          <input type="text" placeholder='search' className='text-slate-500 w-full h-full p-2 px-4 rounded-2xl bg-white focus:outline-0 max-[600px]:p-1 max-[600px]:text-sm max-[600px]:pl-2'/>
+          <input type="text" placeholder='search' className='text-slate-500 w-full h-full p-2 px-4 rounded-2xl bg-white focus:outline-0 max-[600px]:p-1 max-[600px]:text-sm max-[600px]:pl-2' onChange={(e)=>{setsearch(e.target.value)}} />
         </div>
         <div className='flex items-center p-2 h-15 max-[600px]:h-10'>
-          <select name="categories" id="" className='h-full w-[20%] rounded-2xl px-4 bg-white focus:outline-0 text-slate-400 max-[600px]:w-[30%] max-[600px]:text-sm'>
+          <select name="categories" id="" className='h-full w-[20%] rounded-2xl px-4 bg-white focus:outline-0 text-slate-400 max-[600px]:w-[30%] max-[600px]:text-sm' onChange={(e)=>{setcurrentcategory(e.target.value);}}>
             
             <option value="all" className='bg-slate-200 rounded-2xl'>All</option>
             {category = [...new Set(category)]}
@@ -143,18 +168,19 @@ function Inventory() {
             <th>Quantity</th>
             <th>edit</th>
           </tr>
-            { Pro.map((pro,index)=>(
-              <tr className='h-10 text-slate-500'>
-                <td>{index+1} </td>
-                <td className={`${inputarr[index] ? "hidden" : "" } `}>{pro.ProductName}</td>
-                <td className={`${inputarr[index] ? "" : "hidden" }  justify-centerw-[25%]`}><input type="text" placeholder={`${Pro[index].ProductName}`} className='w-[60%] text-center' onChange={(e)=>{seteditName(e.target.value)}}/></td>
-                <td className={`${inputarr[index] ? "hidden" : "" }`}>{pro.Category}</td>
-                <td className={`${inputarr[index] ? "" : "hidden" } justify-center w-[25%]`}><input type="text" placeholder={`${Pro[index].Category}`} className='w-[60%] text-center'onChange={(e)=>{seteditCategory(e.target.value)}}/></td>
-                <td className={`${inputarr[index] ? "hidden" : "" }`}>{pro.Quantity}</td>
-                <td className={`${inputarr[index] ? "" : "hidden" } justify-center w-[25%]`}><input type="Number" placeholder={`${Pro[index].Quantity}`} className='w-[60%] text-center' onChange={(e)=>{seteditQuantity(e.target.value)}}/></td>
-                <td className={`${inputarr[index] ? "hidden" : "" }`}><FontAwesomeIcon icon={faPenToSquare} onClick={()=>{edit(index)}} className='text-blue-500 cursor-pointer' /><FontAwesomeIcon icon={faXmark} className='text-red-500 cursor-pointer' onClick={()=>{remove(index)}}/></td>
-                <td className={`${inputarr[index] ? "" : "hidden" }`}><FontAwesomeIcon icon={faSquareCheck} className='text-green-400 cursor-pointer' onClick={()=>{saveEdit(index)}} /><FontAwesomeIcon icon={faSquareXmark}  onClick={()=>{cancelEdit(index)}} className='text-red-500 cursor-pointer'/></td>
-              </tr>
+            { Pro.filter((pro) => test(pro) )
+                 .map((pro,index)=>(
+                      <tr className='h-10 text-slate-500'>
+                        <td>{index+1} </td>
+                        <td className={`${inputarr[index] ? "hidden" : "" } `}>{pro.ProductName}</td>
+                        <td className={`${inputarr[index] ? "" : "hidden" }  justify-centerw-[25%]`}><input type="text" placeholder={`${Pro[index].ProductName}`} className='w-[60%] text-center' onChange={(e)=>{seteditName(e.target.value)}}/></td>
+                        <td className={`${inputarr[index] ? "hidden" : "" }`}>{pro.Category}</td>
+                        <td className={`${inputarr[index] ? "" : "hidden" } justify-center w-[25%]`}><input type="text" placeholder={`${Pro[index].Category}`} className='w-[60%] text-center'onChange={(e)=>{seteditCategory(e.target.value)}}/></td>
+                        <td className={`${inputarr[index] ? "hidden" : "" }`}>{pro.Quantity}</td>
+                        <td className={`${inputarr[index] ? "" : "hidden" } justify-center w-[25%]`}><input type="Number" placeholder={`${Pro[index].Quantity}`} className='w-[60%] text-center' onChange={(e)=>{seteditQuantity(e.target.value)}}/></td>
+                        <td className={`${inputarr[index] ? "hidden" : "" }`}><FontAwesomeIcon icon={faPenToSquare} onClick={()=>{edit(index)}} className='text-blue-500 cursor-pointer' /><FontAwesomeIcon icon={faXmark} className='text-red-500 cursor-pointer' onClick={()=>{remove(index)}}/></td>
+                        <td className={`${inputarr[index] ? "" : "hidden" }`}><FontAwesomeIcon icon={faSquareCheck} className='text-green-400 cursor-pointer' onClick={()=>{saveEdit(index)}} /><FontAwesomeIcon icon={faSquareXmark}  onClick={()=>{cancelEdit(index)}} className='text-red-500 cursor-pointer'/></td>
+                      </tr>
             ))}
         </table>
       </div>
