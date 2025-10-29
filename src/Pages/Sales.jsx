@@ -5,11 +5,32 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faXmark} from "@fortawesome/free-solid-svg-icons";
 function Sales() {
 
+  if(localStorage.getItem("Customer") === null){
+    let customer = []
+  }else{
+    let customer = JSON.parse(localStorage.getItem("Customer"))
+  }
+
+  const Product = JSON.parse(localStorage.getItem("Product"))
+  // console.log(Product);
+  
   const [rows,setrows] = useState([{pname:"",pweight:"",price:"",charges:"",subtotal:0}]);
   const [total, settotal] = useState(0)
   const [online,setonline] = useState(false);
   const [cash,setcash] = useState(false)
+  const [customername,setcustomername] = useState("")
+  const [customernumber,setcustomernumber] = useState("")
+  const [search,setsearch] = useState("f")
 
+  const test = (pro)=>{
+    // if((JSON.stringify(Object.values(pro)).toLowerCase()).includes(search.toLowerCase())){
+    //   return true
+    // }else{
+    //   return false
+    // }
+  }
+  console.log(JSON.stringify(Object.values(Product[0])).toLowerCase());
+  
   const Online = () =>{
     setonline(true)
     setcash(false)
@@ -58,7 +79,7 @@ function Sales() {
       <div className='flex justify-center items-center mt-4 '>
         <div className='flex flex-col justify-center w-[50%] max-[800px]:text-[14px] max-[1000px]:text-[12px] max-[800px]:w-[90%] '>
           <label htmlFor="" className = 'p-2 text-slate-600 text-xl'>Customer Name</label>
-          <input type="text" className = ' border-2 border-slate-300 shadow-xl w-[100%] mx-2 px-2 rounded-sm'/>
+          <input type="text" className = ' border-2 border-slate-300 shadow-xl w-[100%] mx-2 px-2 rounded-sm' />
           <label htmlFor="" className='p-2 text-slate-600 text-xl'>Customer Number</label>
           <input type="text"  className='border-2 border-slate-300 w-[100%] shadow-xl mx-2 px-2 rounded-sm'/>
         </div>
@@ -69,7 +90,7 @@ function Sales() {
             <table className='w-[100%] mx-2 text-center shadow-2xl table-fixed max-[800px]:text-[10px] max-[1000px]:text-[12px]'>
                 <tr className='border-2 border-slate-300 rounded-2xl h-10 text-slate-500'>
                   <th>Product Name</th>
-                  {/* <th>Weight(g)</th> */}c
+                  <th>Qantity</th>  
                   <th>Price</th>
                   <th>Charges</th>
                   <th>Subtotal</th>
@@ -79,14 +100,18 @@ function Sales() {
                   rows.map((rows,index)=>(
                     <tr key={index} className='border-2 border-slate-300 h-10 text-slate-500'>
                       <td><input type="text" placeholder='Pname' className='w-[100%] text-center  border-none focus:outline-none' onChange={(e)=>{update(index,"pname",e.target.value)}}/></td>
-                      {/* <td><input type="text" placeholder='Weight' className='w-[100%] text-center  border-none focus:outline-none' onChange={(e)=>{update(index,"pweight",e.target.value)}}/></td> */}
+                      <td><input type="number" placeholder='quantity' className='w-[100%] text-center  border-none focus:outline-none' onChange={(e)=>{update(index,"pweight",e.target.value)}}/></td>
                       <td><input type="text" placeholder='Price' className='w-[100%] text-center  border-none focus:outline-none' onChange={(e)=>{update(index,"price",e.target.value)}}/></td>
                       <td><input type="text" placeholder='Charges' className='w-[100%] text-center  border-none focus:outline-none' onChange={(e)=>{update(index,"charges",e.target.value); totalprice(index);}}/></td>
                       <td>{rows.subtotal}</td>
                       <td className='text-red-500'><FontAwesomeIcon icon={faXmark} onClick={()=>{remove(index); totalprice(index);}}/></td>
                     </tr>
                   ))
-                } 
+                }
+                {
+                  Product.filter((pro) => test(pro))
+
+                }
                 <tr className='border-2 rounded-2xl h-10 border-slate-300 text-slate-500'>
                   <td colSpan={4}>Total-Price</td>
                   <td colSpan={1} className='border-l-2 '>{total}</td>

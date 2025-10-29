@@ -15,10 +15,12 @@ function Inventory() {
   const [Name,setName] = useState("")
   const [Category,setCategory] = useState("")
   const [quantity,setQuantity] = useState(0)
+  const [price,setPrice] = useState(0)
   const [inputarr,setinputarr] = useState(Array(Pro.length).fill(false))
   const [editName,seteditName] = useState("")
   const [editCategory,seteditCategory] = useState("")
   const [editQuantity,seteditQuantity] = useState(0)
+  const [editPrice,seteditPrice] = useState(0)
   const [currentcategory,setcurrentcategory] = useState("all")
   const [search,setsearch] = useState("")
 
@@ -34,7 +36,6 @@ function Inventory() {
     }
     if((JSON.stringify(Object.values(pro)).toLowerCase()).includes(search.toLowerCase())){
       return true
-       console.log(33,true)
     }else{
       return false
     }
@@ -56,7 +57,8 @@ function Inventory() {
       const ProductDetail = {
         ProductName : Name,
         Category : Category,
-        Quantity : quantity
+        Quantity : quantity,
+        Price : price
       }
       Pro.push(ProductDetail)
       localStorage.setItem("Product",JSON.stringify(Pro))
@@ -90,6 +92,7 @@ function Inventory() {
       Pro[index]["ProductName"] = editName
       Pro[index]["Category"] = editCategory
       Pro[index]["Quantity"] = editQuantity
+      Pro[index]["Price"] = price
       localStorage.setItem("Product",JSON.stringify(Pro))
       alert("Product is edited")
       let arr = [...inputarr]
@@ -132,6 +135,10 @@ function Inventory() {
               <td><label htmlFor="quantity" className='pr-2 text-slate-400'>Quantity</label></td>
               <td><input type="Number" placeholder='quantity' className='border-slate-300 border-2 rounded-sm text-sm p-1' onChange={(e)=>{setQuantity(e.target.value)}}/></td>
             </tr>
+            <tr>
+              <td><label htmlFor="price" className='pr-2 text-slate-400'>Price</label></td>
+              <td><input type="Number" placeholder='Price' className='border-slate-300 border-2 rounded-sm text-sm p-1' onChange={(e)=>{setPrice(e.target.value)}}/></td>
+            </tr>
           </table>
           <div className='pt-4 flex justify-end'>
             <button className='text-sm px-2 py-1 border-2 border-slate-300 rounded-lg mx-2 bg-slate-300 hover:bg-slate-100' onClick={add}>Cancel</button>
@@ -166,6 +173,7 @@ function Inventory() {
             <th>ProductName</th>
             <th>Category</th>
             <th>Quantity</th>
+            <th>Price</th>
             <th>edit</th>
           </tr>
             { Pro.filter((pro) => test(pro) )
@@ -173,11 +181,13 @@ function Inventory() {
                       <tr className='h-10 text-slate-500'>
                         <td>{index+1} </td>
                         <td className={`${inputarr[index] ? "hidden" : "" } `}>{pro.ProductName}</td>
-                        <td className={`${inputarr[index] ? "" : "hidden" }  justify-centerw-[25%]`}><input type="text" placeholder={`${Pro[index].ProductName}`} className='w-[60%] text-center' onChange={(e)=>{seteditName(e.target.value)}}/></td>
+                        <td className={`${inputarr[index] ? "" : "hidden" }  justify-centerw-[20%]`}><input type="text" placeholder={`${Pro[index].ProductName}`} className='w-[60%] text-center' onChange={(e)=>{seteditName(e.target.value)}}/></td>
                         <td className={`${inputarr[index] ? "hidden" : "" }`}>{pro.Category}</td>
-                        <td className={`${inputarr[index] ? "" : "hidden" } justify-center w-[25%]`}><input type="text" placeholder={`${Pro[index].Category}`} className='w-[60%] text-center'onChange={(e)=>{seteditCategory(e.target.value)}}/></td>
+                        <td className={`${inputarr[index] ? "" : "hidden" } justify-center w-[20%]`}><input type="text" placeholder={`${Pro[index].Category}`} className='w-[60%] text-center'onChange={(e)=>{seteditCategory(e.target.value)}}/></td>
                         <td className={`${inputarr[index] ? "hidden" : "" }`}>{pro.Quantity}</td>
-                        <td className={`${inputarr[index] ? "" : "hidden" } justify-center w-[25%]`}><input type="Number" placeholder={`${Pro[index].Quantity}`} className='w-[60%] text-center' onChange={(e)=>{seteditQuantity(e.target.value)}}/></td>
+                        <td className={`${inputarr[index] ? "" : "hidden" } justify-center w-[20%]`}><input type="Number" placeholder={`${Pro[index].Quantity}`} className='w-[60%] text-center' onChange={(e)=>{seteditQuantity(e.target.value)}}/></td>
+                        <td className={`${inputarr[index] ? "hidden" : "" }`}>{pro.Price}</td>
+                        <td className={`${inputarr[index] ? "" : "hidden" } justify-center w-[20%]`}><input type="Number" placeholder={`${Pro[index].Price}`} className='w-[60%] text-center' onChange={(e)=>{seteditPrice(e.target.value)}}/></td>
                         <td className={`${inputarr[index] ? "hidden" : "" }`}><FontAwesomeIcon icon={faPenToSquare} onClick={()=>{edit(index)}} className='text-blue-500 cursor-pointer' /><FontAwesomeIcon icon={faXmark} className='text-red-500 cursor-pointer' onClick={()=>{remove(index)}}/></td>
                         <td className={`${inputarr[index] ? "" : "hidden" }`}><FontAwesomeIcon icon={faSquareCheck} className='text-green-400 cursor-pointer' onClick={()=>{saveEdit(index)}} /><FontAwesomeIcon icon={faSquareXmark}  onClick={()=>{cancelEdit(index)}} className='text-red-500 cursor-pointer'/></td>
                       </tr>
