@@ -2,8 +2,7 @@ import React, { useState } from 'react'
 import Header from '../Components/Header'
 import Title from '../Components/Title'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
-import {faXmark} from "@fortawesome/free-solid-svg-icons";
+import {faXmark , faPenToSquare, faSquareCheck, faSquareXmark} from "@fortawesome/free-solid-svg-icons";
 function Inventory() {
 
   let Pro = []
@@ -16,6 +15,12 @@ function Inventory() {
   const [Name,setName] = useState("")
   const [Category,setCategory] = useState("")
   const [quantity,setQuantity] = useState(0)
+  const [inputarr,setinputarr] = useState(Array(Pro.length).fill(false))
+  const [editName,seteditName] = useState("")
+  const [editCategory,seteditCategory] = useState("")
+  const [editQuantity,seteditQuantity] = useState(0)
+  let category = []
+  console.log(inputarr);
   const add = () =>{
     setadditem(!additem)
   }
@@ -33,11 +38,48 @@ function Inventory() {
       localStorage.setItem("Product",JSON.stringify(Pro))
       setadditem(!additem)
       alert("product is added")
+      category = Pro.map(pro => pro.Category);
       window.location.reload()
     }
 
   }
+  category = Pro.map(pro => pro.Category);
+  // setcategoryarr(category);
+  const remove = (index) => {
+    Pro.splice(index,1)
+    localStorage.setItem("Product",JSON.stringify(Pro))
+    alert("Product is removed")
+    window.location.reload()
+    category = Pro.map(pro => pro.Category);
+  }
+  
+  const edit = (index)=>{
+    let arr = [...inputarr]
+    arr[index] = !arr[index]
+    category = Pro.map(pro => pro.Category);
+    setinputarr(arr)
+  }
+  const saveEdit = (index)=>{
+    if(editName === "" || editCategory === "" || editQuantity === 0){
+      alert("Check the missing field")
+    } else{
+      Pro[index]["ProductName"] = editName
+      Pro[index]["Category"] = editCategory
+      Pro[index]["Quantity"] = editQuantity
+      localStorage.setItem("Product",JSON.stringify(Pro))
+      alert("Product is edited")
+      let arr = [...inputarr]
+      arr[index] = !arr[index]
+      setinputarr(arr)
+      window.location.reload()
+    }
 
+  }
+  const cancelEdit = (index)=>{
+    let arr = [...inputarr]
+    arr[index] = !arr[index]
+    setinputarr(arr)
+  }
   
 
   return (
@@ -81,13 +123,19 @@ function Inventory() {
         </div>
         <div className='flex items-center p-2 h-15 max-[600px]:h-10'>
           <select name="categories" id="" className='h-full w-[20%] rounded-2xl px-4 bg-white focus:outline-0 text-slate-400 max-[600px]:w-[30%] max-[600px]:text-sm'>
-            <option value="chain" className='bg-slate-200 rounded-2xl'>ALL</option>
-            <option value="chain" className='bg-slate-200 rounded-2xl'>chain</option>
+            
+            <option value="all" className='bg-slate-200 rounded-2xl'>All</option>
+            {category = [...new Set(category)]}
+            {
+              category.map((cat,index)=>(
+                <option value={cat} key={index} className='bg-slate-200 rounded-2xl'>{cat}</option>
+              ))
+            }
           </select>
         </div>
       </div>
-      <div className='flex flex-col mx-4 px-2 mt-4 max-[600px]:px-0 max-[600px]:mx-0'>
-        <table className='border-collapse border-spacing-0 w-full h-full rounded-2xl border-2 border-slate-300 text-center max-[600px]:text-sm'>
+      <div className='flex flex-col mx-4 px-2 mt-4 max-[600px]:px-0 max-[600px]:mx-0 relative'>
+        <table className='border-collapse border-spacing-0 w-full h-full rounded-2xl border-2 border-slate-300 text-center max-[600px]:text-sm '>
           <tr className='h-10 border border-slate-300'>
             <th>S.no</th>
             <th>ProductName</th>
@@ -97,11 +145,15 @@ function Inventory() {
           </tr>
             { Pro.map((pro,index)=>(
               <tr className='h-10 text-slate-500'>
-                <td>{index+1}</td>
-                <td>{pro.ProductName}</td>
-                <td>{pro.Category}</td>
-                <td>{pro.Quantity}</td>
-                <td><button></button><button className='text-red-500' ><FontAwesomeIcon icon={faXmark}/></button> </td>
+                <td>{index+1} </td>
+                <td className={`${inputarr[index] ? "hidden" : "" } `}>{pro.ProductName}</td>
+                <td className={`${inputarr[index] ? "" : "hidden" }  justify-centerw-[25%]`}><input type="text" placeholder={`${Pro[index].ProductName}`} className='w-[60%] text-center' onChange={(e)=>{seteditName(e.target.value)}}/></td>
+                <td className={`${inputarr[index] ? "hidden" : "" }`}>{pro.Category}</td>
+                <td className={`${inputarr[index] ? "" : "hidden" } justify-center w-[25%]`}><input type="text" placeholder={`${Pro[index].Category}`} className='w-[60%] text-center'onChange={(e)=>{seteditCategory(e.target.value)}}/></td>
+                <td className={`${inputarr[index] ? "hidden" : "" }`}>{pro.Quantity}</td>
+                <td className={`${inputarr[index] ? "" : "hidden" } justify-center w-[25%]`}><input type="Number" placeholder={`${Pro[index].Quantity}`} className='w-[60%] text-center' onChange={(e)=>{seteditQuantity(e.target.value)}}/></td>
+                <td className={`${inputarr[index] ? "hidden" : "" }`}><FontAwesomeIcon icon={faPenToSquare} onClick={()=>{edit(index)}} className='text-blue-500 cursor-pointer' /><FontAwesomeIcon icon={faXmark} className='text-red-500 cursor-pointer' onClick={()=>{remove(index)}}/></td>
+                <td className={`${inputarr[index] ? "" : "hidden" }`}><FontAwesomeIcon icon={faSquareCheck} className='text-green-400 cursor-pointer' onClick={()=>{saveEdit(index)}} /><FontAwesomeIcon icon={faSquareXmark}  onClick={()=>{cancelEdit(index)}} className='text-red-500 cursor-pointer'/></td>
               </tr>
             ))}
         </table>

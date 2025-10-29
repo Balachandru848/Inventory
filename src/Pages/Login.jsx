@@ -18,7 +18,7 @@ function Login() {
                 <input type="text" placeholder='Password' className='border-2 rounded-lg mx-2 my-1 h-[50%] px-2 border-slate-200 shadow-blue-300 focus:shadow-lg focus:outline-none focus:border-x-0 focus:border-t-0  focus:border-blue-400 transition-all duration-500'/>
             </div>
             <div className='flex flex-col w-[100%] h-[30%]'>
-                <button className='rounded-lg mx-auto w-[60%]  h-[40%] px-2 m-5 bg-blue-400 hover:bg-slate-400 hover:text-white hover:shadow-lg shadow-slate-600 transition-all duration-700'><Link to="/Home">Login</Link></button>
+                <button className='rounded-lg mx-auto w-[60%]  h-[40%] px-2 m-5 bg-blue-400 hover:bg-slate-400 hover:text-white hover:shadow-lg shadow-slate-600 transition-all duration-700'><Link to="/Home" className=''>Login</Link></button>
             </div>
         </div>
     </div>
