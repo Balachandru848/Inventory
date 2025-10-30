@@ -14,22 +14,20 @@ function Sales() {
   const Product = JSON.parse(localStorage.getItem("Product"))
   // console.log(Product);
   
-  const [rows,setrows] = useState([{pname:"",pweight:"",price:"",charges:"",subtotal:0}]);
+  const [rows,setrows] = useState([{pname:"",quantity:0,price:0,charges:"",subtotal:0}]);
   const [total, settotal] = useState(0)
   const [online,setonline] = useState(false);
   const [cash,setcash] = useState(false)
   const [customername,setcustomername] = useState("")
   const [customernumber,setcustomernumber] = useState("")
-  const [search,setsearch] = useState("f")
+  const [search,setsearch] = useState("")
 
-  const test = (pro)=>{
-    // if((JSON.stringify(Object.values(pro)).toLowerCase()).includes(search.toLowerCase())){
-    //   return true
-    // }else{
-    //   return false
-    // }
-  }
-  console.log(JSON.stringify(Object.values(Product[0])).toLowerCase());
+  // let testresult  = false;
+  const test = (pro) => {
+    return (Object.values(pro).join("")).toLowerCase().includes(search.toLowerCase());
+  };
+  
+  
   
   const Online = () =>{
     setonline(true)
@@ -42,16 +40,35 @@ function Sales() {
   }
 
   const addrows = ()=>{
-      setrows([...rows, {pname: "", weight: "", price: "", charges: "" ,subtotal:0}]);
+      setrows([...rows, {pname: "", quantity: 0, price: 0, charges: "" ,subtotal:0}]);
   }
 
-  const update = (index,key,value) =>{
-    const row = [...rows]
-    row[index][key] = value;
-    row[index]["subtotal"] = Number(row[index]["price"])+Number(row[index]["charges"]); 
-    setrows(row)
+  const update = (index, value) => {
+    const row = [...rows];
+    row[index]["quantity"] = value;
+    setrows(row);
   }
 
+  const updatecharges = (index, value) => {
+    const row = [...rows];
+    row[index]["charges"] = value;
+    row[index]["subtotal"] = (Number(row[index]["quantity"]) * Number(row[index]["price"])) + Number(value);
+    setrows(row);
+
+  }
+
+
+  const updateProduct = (pname) => () => {
+    // alert(pname)
+    const row = [...rows];
+    const lastIndex = row.length - 1;
+    row[lastIndex]["pname"] = pname[1];
+    row[lastIndex]["price"] = pname[0];
+    setrows(row);
+    console.log(rows.pname);
+    
+  }
+  
   const totalprice = () =>{
     setTimeout((index)=>{
       // if(rows[index]["subtotal"] !== 0){
@@ -99,17 +116,28 @@ function Sales() {
                 {
                   rows.map((rows,index)=>(
                     <tr key={index} className='border-2 border-slate-300 h-10 text-slate-500'>
-                      <td><input type="text" placeholder='Pname' className='w-[100%] text-center  border-none focus:outline-none' onChange={(e)=>{update(index,"pname",e.target.value)}}/></td>
-                      <td><input type="number" placeholder='quantity' className='w-[100%] text-center  border-none focus:outline-none' onChange={(e)=>{update(index,"pweight",e.target.value)}}/></td>
-                      <td><input type="text" placeholder='Price' className='w-[100%] text-center  border-none focus:outline-none' onChange={(e)=>{update(index,"price",e.target.value)}}/></td>
-                      <td><input type="text" placeholder='Charges' className='w-[100%] text-center  border-none focus:outline-none' onChange={(e)=>{update(index,"charges",e.target.value); totalprice(index);}}/></td>
+                      <td>{rows.pname}</td>
+                      <td><input type="number" className='w-[100%] text-center  border-none focus:outline-none' onChange={(e)=>{update(index,e.target.value)}}/></td>
+                      <td>{rows.price}</td>
+                      <td><input type="number" className='w-[100%] text-center  border-none focus:outline-none' onChange={(e)=>{updatecharges(index,e.target.value)}}/></td>
                       <td>{rows.subtotal}</td>
                       <td className='text-red-500'><FontAwesomeIcon icon={faXmark} onClick={()=>{remove(index); totalprice(index);}}/></td>
                     </tr>
                   ))
                 }
+                <tr className='border-2 border-slate-300 h-10 text-slate-500'>
+                  <td colSpan={6}><input type="text" placeholder='search product' className='w-[100%] text-center  border-none focus:outline-none' onChange={(e)=>{setsearch(e.target.value)}}/></td>
+                </tr>
                 {
-                  Product.filter((pro) => test(pro))
+                  Product.filter((pro) => test(pro)).map((pro,index)=>{
+                    return(
+                      <tr onClick={updateProduct([pro.Price,pro.ProductName])} key={index} className='border-2 border-slate-300 h-10 text-slate-500 hover:bg-slate-100 cursor-pointer'>
+                        <td>{pro.ProductName}</td>
+                        <td>{pro.Quantity}</td>
+                        <td>{pro.Price}</td>
+                      </tr>
+                    )
+                  })
 
                 }
                 <tr className='border-2 rounded-2xl h-10 border-slate-300 text-slate-500'>
