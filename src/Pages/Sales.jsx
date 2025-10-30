@@ -4,14 +4,16 @@ import Title from '../Components/Title'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faXmark} from "@fortawesome/free-solid-svg-icons";
 function Sales() {
-
+let customer = []
   if(localStorage.getItem("Customer") === null){
-    let customer = []
+     customer = []
   }else{
-    let customer = JSON.parse(localStorage.getItem("Customer"))
+    customer = JSON.parse(localStorage.getItem("Customer"))
   }
 
   const Product = JSON.parse(localStorage.getItem("Product"))
+
+  
   // console.log(Product);
   
   const [rows,setrows] = useState([{pname:"",quantity:0,price:0,charges:"",subtotal:0}]);
@@ -26,6 +28,43 @@ function Sales() {
   const test = (pro) => {
     return (Object.values(pro).join("")).toLowerCase().includes(search.toLowerCase());
   };
+  const updatedcustomer = () => {
+    if(customername === "" || customernumber === ""){
+      alert("enter the customer details")
+    }else if(online === false && cash === false){
+      alert("select the payment method")
+    }else{
+        const BillDetail = {
+          Products : rows,
+          Total : total,
+          PaymentMethod : online ? "Online" : "Cash",
+          Date : new Date().toLocaleDateString()
+        }
+        const CustomerDetail = {
+          Name : customername,
+          Number : customernumber,
+          Bills:[]
+        }
+        CustomerDetail.Bills.push(BillDetail)
+        customer.push(CustomerDetail)
+        localStorage.setItem("Customer",JSON.stringify(customer))
+        alert("Bill Generated Successfully")
+        setrows([{pname:"",quantity:0,price:0,charges:"",subtotal:0}])
+        settotal(0)
+        setcustomername("")
+        setcustomernumber("")
+        setonline(false)
+        setcash(false)
+        const index = Product.findIndex((pro) => pro.ProductName === rows[rows.length-1].pname);
+        Product[index].Quantity = Product[index].Quantity - rows[rows.length-1].quantity;
+        if(Product[index].Quantity === 0){
+          Product.splice(index,1)
+        }
+        localStorage.setItem("Product",JSON.stringify(Product))
+        window.location.reload();
+
+    }
+  }
   
   
   
@@ -40,7 +79,17 @@ function Sales() {
   }
 
   const addrows = ()=>{
-      setrows([...rows, {pname: "", quantity: 0, price: 0, charges: "" ,subtotal:0}]);
+      if(rows.length > 0 && rows[rows.length-1].quantity === 0){
+        alert("fill the quantity")
+      }else{
+        const index = Product.findIndex((pro) => pro.ProductName === rows[rows.length-1].pname);
+        Product[index].Quantity = Product[index].Quantity - rows[rows.length-1].quantity;
+        if(Product[index].Quantity === 0){
+          Product.splice(index,1)
+        }
+        localStorage.setItem("Product",JSON.stringify(Product))
+        setrows([...rows, {pname: "", quantity: 0, price: 0, charges: "" ,subtotal:0}]);
+      }
   }
 
   const update = (index, value) => {
@@ -96,9 +145,9 @@ function Sales() {
       <div className='flex justify-center items-center mt-4 '>
         <div className='flex flex-col justify-center w-[50%] max-[800px]:text-[14px] max-[1000px]:text-[12px] max-[800px]:w-[90%] '>
           <label htmlFor="" className = 'p-2 text-slate-600 text-xl'>Customer Name</label>
-          <input type="text" className = ' border-2 border-slate-300 shadow-xl w-[100%] mx-2 px-2 rounded-sm' />
+          <input type="text" className = ' border-2 border-slate-300 shadow-xl w-[100%] mx-2 px-2 rounded-sm' onChange={(e)=>{setcustomername(e.target.value)}} />
           <label htmlFor="" className='p-2 text-slate-600 text-xl'>Customer Number</label>
-          <input type="text"  className='border-2 border-slate-300 w-[100%] shadow-xl mx-2 px-2 rounded-sm'/>
+          <input type="text"  className='border-2 border-slate-300 w-[100%] shadow-xl mx-2 px-2 rounded-sm' onChange={(e)=>{setcustomernumber(e.target.value)}}/>
         </div>
       </div>
       <div className='flex justify-center items-center pb-10'>
@@ -156,7 +205,7 @@ function Sales() {
               <button className={`text-[12px] w-[20%] border-2 p-1 border-slate-400 rounded-sm  bg-blue-400 hover:shadow-2xl shadow-blue-400  transition-shadow duration-300 max-[600px]:text-[10px] max-[600px]:h-8 
               ${cash ? "bg-blue-500 text-white shadow-lg" : "bg-gray-200 text-gray-700 hover:bg-gray-300"}`} onClick={Cash}>Cash</button>
             </div>
-            <button className='w-[100%] border-2 mx-2  border-slate-400 rounded-sm p-2 bg-green-600 hover:shadow-2xl shadow-green-400  transition-shadow duration-300 text-white'>Generate Bill</button>
+            <button className='w-[100%] border-2 mx-2  border-slate-400 rounded-sm p-2 bg-green-600 hover:shadow-2xl shadow-green-400  transition-shadow duration-300 text-white' onClick={updatedcustomer}>Generate Bill</button>
           </div>
         </div>
       </div>
