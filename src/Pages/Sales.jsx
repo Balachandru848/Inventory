@@ -11,9 +11,13 @@ let customer = []
     customer = JSON.parse(localStorage.getItem("Customer"))
   }
 
+let bill = []
+  if(localStorage.getItem("bill") === null){
+     bill = []
+  }else{
+    bill = JSON.parse(localStorage.getItem("bill"))
+  }
   const Product = JSON.parse(localStorage.getItem("Product"))
-
-  
   // console.log(Product);
   
   const [rows,setrows] = useState([{pname:"",quantity:0,price:0,charges:"",subtotal:0}]);
@@ -21,7 +25,7 @@ let customer = []
   const [online,setonline] = useState(false);
   const [cash,setcash] = useState(false)
   const [customername,setcustomername] = useState("")
-  const [customernumber,setcustomernumber] = useState("")
+  const [customernumber,setcustomernumber] = useState(0)
   const [search,setsearch] = useState("")
 
   // let testresult  = false;
@@ -33,8 +37,11 @@ let customer = []
       alert("enter the customer details")
     }else if(online === false && cash === false){
       alert("select the payment method")
+      
     }else{
         const BillDetail = {
+          Name : customername,
+          Number : customernumber,
           Products : rows,
           Total : total,
           PaymentMethod : online ? "Online" : "Cash",
@@ -45,23 +52,35 @@ let customer = []
           Number : customernumber,
           Bills:[]
         }
-        CustomerDetail.Bills.push(BillDetail)
-        customer.push(CustomerDetail)
-        localStorage.setItem("Customer",JSON.stringify(customer))
-        alert("Bill Generated Successfully")
-        setrows([{pname:"",quantity:0,price:0,charges:"",subtotal:0}])
-        settotal(0)
-        setcustomername("")
-        setcustomernumber("")
-        setonline(false)
-        setcash(false)
-        const index = Product.findIndex((pro) => pro.ProductName === rows[rows.length-1].pname);
-        Product[index].Quantity = Product[index].Quantity - rows[rows.length-1].quantity;
-        if(Product[index].Quantity === 0){
-          Product.splice(index,1)
+        bill.push(BillDetail)
+        localStorage.setItem("bill",JSON.stringify(bill))
+        const Proindex = customer.findIndex((customer) => (customer.Name.toLowerCase() === customername.toLowerCase()) && (customer.Number === customernumber));
+        
+        if(Proindex !== -1){
+          customer[Proindex].Bills.push(BillDetail)
+          localStorage.setItem("Customer",JSON.stringify(customer))
+          const index = Product.findIndex((pro) => pro.ProductName === rows[rows.length-1].pname);
+          Product[index].Quantity = Product[index].Quantity - rows[rows.length-1].quantity;
+          alert("Bill Generated Successfully")
+        } else {
+          CustomerDetail.Bills.push(BillDetail)
+          customer.push(CustomerDetail)
+          localStorage.setItem("Customer",JSON.stringify(customer))
+          alert("Bill Generated Successfully welcome new customer")
+          setrows([{pname:"",quantity:0,price:0,charges:"",subtotal:0}])
+          settotal(0)
+          setcustomername("")
+          setcustomernumber("")
+          setonline(false)
+          setcash(false)
+          const index = Product.findIndex((pro) => pro.ProductName === rows[rows.length-1].pname);
+          Product[index].Quantity = Product[index].Quantity - rows[rows.length-1].quantity;
+          if(Product[index].Quantity === 0){
+            Product.splice(index,1)
+          }
+          localStorage.setItem("Product",JSON.stringify(Product))
+          window.location.reload();
         }
-        localStorage.setItem("Product",JSON.stringify(Product))
-        window.location.reload();
 
     }
   }

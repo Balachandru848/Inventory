@@ -1,9 +1,16 @@
-import React from 'react'
+import React, { use, useState } from 'react'
 import Header from '../Components/Header'
 import Title from '../Components/Title'
 import { Link } from 'react-router-dom'
 
+
 function Home() {
+  const [counts, setcounts] = useState(1);
+  const totalSales = localStorage.getItem("bill") ? JSON.parse(localStorage.getItem("bill")).length : 0;
+  const totalInventoryitem = localStorage.getItem("Product") ? JSON.parse(localStorage.getItem("Product")).length : 0;
+  const Bill = localStorage.getItem("bill") ? JSON.parse(localStorage.getItem("bill")) : [];
+  const customer = localStorage.getItem("Customer") ? JSON.parse(localStorage.getItem("Customer")) : [];
+  let count = 0
   return (
     <div className='h-[100%]  border-2 border-slate-200 rounded-2xl p-1 shadow-xl'>
       <Header />
@@ -11,11 +18,11 @@ function Home() {
       <div className='flex justify-around h-[25%] max-[600px]:h-[40%] max-[600px]:flex-col'>
           <div className='flex-2 flex-col p-4 border-2 border-solid border-slate-100 m-2 rounded-xl shadow-md max-[600px]:p-0 shadow-slate-400'>
               <p className='flex text-slate-500 max-[600px]:text-sm p-1'>Total Sales Count</p>
-              <p className='text-2xl px-2 max-[600px]:text-xl p-0'>1000</p>
+              <p className='text-2xl px-2 max-[600px]:text-xl p-0'>{totalSales}</p>
           </div>
           <div className='flex-2 flex-col p-4 border-2 border-solid border-slate-100 m-2 rounded-xl shadow-md max-[600px]:p-0 shadow-slate-400'>
-              <p className='flex text-slate-500 max-[600px]:text-sm p-1'>Total Inventory Weight </p>
-              <p className='text-2xl px-2 max-[600px]:text-xl p-0'>2000g</p>
+              <p className='flex text-slate-500 max-[600px]:text-sm p-1'>Total Inventory items</p>
+              <p className='text-2xl px-2 max-[600px]:text-xl p-0'>{totalInventoryitem}</p>
           </div>
           <div className='flex-3 flex-col p-2 border-2 border-solid border-slate-100 m-2 rounded-xl shadow-md max-[600px]:p-0 shadow-slate-400 max-[600px]:h-[1000px]'>
               <div className='flex w-full h-full justify-evenly'>
@@ -52,29 +59,30 @@ function Home() {
             </div>
             <table className='shadow-md max-[600px]:text-[12px] shadow-slate-400'>
               <tr className='border-2 border-solid border-slate-200'>
-                <th className='py-2'>Bill ID</th>
-                <th className='py-2'>Date</th>
+                <th className='py-2'>Bill.no</th>
+                <th className='py-2'>Product</th>
                 <th className='py-2'>Customer</th>
                 {/* <th className='py-2'>Weight</th> */}
                 <th className='py-2'>Amount</th>
                 <th className='py-2'>Payment</th>
               </tr>
-              <tr className='border-2 border-solid border-slate-200'>
-                <td className='text-center py-2'>#1234</td>
-                <td className='text-center'>09-9-2025</td>
-                <td className='text-center'>Sivam</td>
-                {/* <td className='text-center'>20g</td> */}
-                <td className='text-center'>2000</td>
-                <td className='text-center'>Cash</td>
-              </tr>
-              <tr className='border-2 border-solid border-slate-200'>
-                <td className='text-center py-2'>#1234</td>
-                <td className='text-center'>09-9-2025</td>
-                <td className='text-center'>Sivam</td>
-                {/* <td className='text-center'>20g</td> */}
-                <td className='text-center'>2000</td>
-                <td className='text-center'>Online</td>
-              </tr>
+              {
+                Bill.map((bill,index)=>{
+                  return(
+                    <tr className='border-2 border-solid border-slate-200'>
+                      <td className='text-center py-2'>{index+1}</td>
+                      <td className='text-center'>{bill.Products.map((p, i) => (<span key={i}>{p.pname}{i !== bill.Products.length - 1 && ", "}
+                                                                </span>
+                                                              ))}</td>
+                      <td className='text-center'>{bill.Name}</td>
+                      {/* <td className='text-center'>20g</td> */}
+                      <td className='text-center'>{bill.Total}</td>
+                      <td className='text-center'>{bill.PaymentMethod}</td>
+                    </tr>
+                  )
+                })
+              }
+              
               
             </table> 
       </div>
