@@ -15,6 +15,7 @@ function Login() {
     if(name === "" || password === ""){
         alert("Enter the Missing Field")
     }else{
+        navigate('/Home')
         const nameCheck = user.some(obj => obj.Name.trim() === name.trim())
         const passwordCheck = user.some(obj => obj.Password.trim() === password.trim())
         if(nameCheck && passwordCheck){
