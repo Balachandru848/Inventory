@@ -6,7 +6,8 @@ import { faBars} from "@fortawesome/free-solid-svg-icons";
 function Header() {
      
     const [toggle,settoggle] = useState(false);
-
+    const name = JSON.parse(localStorage.getItem("userData"))
+    
     const click = () =>{
         settoggle(!toggle)
     }
@@ -29,7 +30,7 @@ function Header() {
                 </ul>
             </div>
             <div className="flex justify-end items-center flex-1 ">
-                <p>Profile</p>
+                <p>{name[0].name}</p>
                 {/* <img src="" alt="" /> */}
                 <button className={"h-[20px] px-2 hidden max-[600px]:flex "}onClick={click}><FontAwesomeIcon icon={faBars} /></button>
             </div>

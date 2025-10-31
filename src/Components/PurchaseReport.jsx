@@ -3,7 +3,7 @@ import React from 'react'
 function PurchaseReport({visible}) {
     const purchase = localStorage.getItem("Purchase") ? JSON.parse(localStorage.getItem("Purchase")) : [];
     const PurchaseDetail = purchase[purchase.length - 1] || {Products: [], Total: 0, PaymentMethod: "N/A", Date: "N/A", SupplierName: "N/A"};
-  return (
+  return (  
     <div className={`flex flex-col justify-evenly items-center h-auto ${visible ? "": "hidden"}`}>
         <div className='my-2 flex flex-col w-[74%] border-2 border-slate-300 shadow-xl bg-slate-100 p-2 rounded-2xl max-[600px]:w-[100%]'>
             <h1 className='text-xl max-[600px]:text-lg'>Purchase Bill</h1>

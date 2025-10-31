@@ -10,7 +10,7 @@ function Settings() {
     const [name,setname]=useState("")
     const [role,setrole]=useState("Sales Person")
     const [password,setpassword]=useState("")
-
+    const updatename = JSON.parse(localStorage.getItem("userData"))
     const user = JSON.parse(localStorage.getItem("User")) || [];
     console.log(user);
     
@@ -54,8 +54,8 @@ function Settings() {
                     <FontAwesomeIcon icon={faUser} className='text-[300%] max-[600px]:text-[200%]'/>
                 </div>
                 <div className='flex w-[100%] h-20 justify-between px-4 items-center my-2 text-xl max-[600px]:flex-col max-[600px]:items-baseline max-[600px]:text-lg max-[600px]:h-15'>
-                    <h1>Name</h1>
-                    <h1>Role</h1>   
+                    <h1>{updatename[0].name}</h1>
+                    <h1>{updatename[0].role}</h1>   
                 </div>
             </div>
             <div className='flex flex-col w-[60%] h-20 border-2 mb-4 px-2 rounded-xl  border-slate-300 shadow-2xl max-[600px]:w-[80%]'>
