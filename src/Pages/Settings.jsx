@@ -7,6 +7,42 @@ import {Link} from 'react-router-dom'
 
 function Settings() {
     const [adduser,setadduser]=useState(false)
+    const [name,setname]=useState("")
+    const [role,setrole]=useState("Sales Person")
+    const [password,setpassword]=useState("")
+
+    const user = JSON.parse(localStorage.getItem("User")) || [];
+    console.log(user);
+    
+    const add = () => {
+        const newuser = {
+            Name : name,
+            Role : role,
+            Password : password
+        }
+        user.push(newuser)
+        localStorage.setItem("User",JSON.stringify(user))
+        alert("User added successfully")
+        window.location.reload();
+    }
+
+    const editPassword = (index) => {
+        const newPassword = prompt("Enter new password:");
+        if (newPassword) {
+            user[index].Password = newPassword;
+            localStorage.setItem("User", JSON.stringify(user));
+            alert("Password updated successfully");
+        }
+    }
+
+    const remove = (index) => {
+        const confirm = prompt("Enter delete:");
+        if(confirm === "DELETE" || confirm === "delete"){
+            user.splice(index, 1);
+            localStorage.setItem("User",JSON.stringify(user))
+            window.location.reload()
+        }
+    }
 
   return (
     <div className='border-2 border-slate-200 rounded-2xl p-1 shadow-xl'>
@@ -31,9 +67,9 @@ function Settings() {
                     <div className='flex w-[60%] justify-end text-sm max-[600px]:text-[10px]'>60%</div>
                 </div>
             </div>
-            <div className='flex flex-col w-[60%]  border-2 mb-4 px-2 rounded-xl  border-slate-300 shadow-2xl max-[600px]:w-[80%]'>
+            <div className='flex flex-col w-[60%]  border-2 mb-4 px-2 rounded-xl  border-slate-300 shadow-2xl max-[600px]:w-[90%]'>
                 <h1 className='text-xl py-2 max-[600px]:text-lg'>Users</h1>
-                <table className='border-2 rounded-2xl border-separate w-full  border-slate-300 text-l'>
+                <table className='border-2 rounded-2xl border-separate w-full  border-slate-300 text-l max-[600px]:text-sm '>
                     <tr>
                         <th>S.no</th>
                         <th>Name</th>
@@ -41,13 +77,15 @@ function Settings() {
                         <th>Password</th>
                         <th>delete</th>
                     </tr>
-                    <tr className='text-center'>
-                        <td>1</td>
-                        <td>chandru</td>
-                        <td>Admin</td>
-                        <td ><button className='hover:text-blue-300 transition-all duration-300'>Edit</button></td>
-                        <td className='hover:text-red-500'>delete</td>
-                    </tr>
+                    {user.map((item,index)=>{
+                        return(<tr className='text-center '>
+                            <td>{index+1}</td>
+                            <td>{item.Name}</td>
+                            <td>{item.Role}</td>
+                            <td ><button className='hover:text-blue-300 transition-all duration-300' onClick={()=>{editPassword(index)}}>Edit</button></td>
+                            <td className='hover:text-red-500' onClick={()=>{remove(index)}}>delete</td>
+                        </tr>)
+                    })}
                 </table>
 
                 <div className={`flex flex-col justify-center items-center transition-all duration-1000 
@@ -59,17 +97,17 @@ function Settings() {
                             <label htmlFor="password" className='my-1'>Password :</label>
                         </div>
                         <div className='flex flex-col justify-between w-[60%]'>
-                            <input type="text" className='border-2 my-1 rounded-sm p-1 border-slate-400 focus:outline-none '/>
-                             <select name="role" id="" className='border-2  my-1 rounded-sm p-1 border-slate-400 focus:outline-none'>
+                            <input type="text" className='border-2 my-1 rounded-sm p-1 border-slate-400 focus:outline-none'onChange={(e)=>{setname(e.target.value)}}/>
+                             <select name="role" id="" className='border-2  my-1 rounded-sm p-1 border-slate-400 focus:outline-none' onChange={(e)=>{setrole(e.target.value)}}>
                                 <option value="Sales Person">Sales Person</option> 
                                 <option value="Inventory manager">Inventory Manager</option>
                                 <option value="Admin">Admin</option>
                             </select>
-                            <input type="text" className='border-2 my-1 rounded-sm p-1 border-slate-400 focus:outline-none'/>
+                            <input type="password" className='border-2 my-1 rounded-sm p-1 border-slate-400 focus:outline-none' onChange={(e)=>{setpassword(e.target.value)}}/>
                         </div>
                     </div>
                     <div className='flex justify-around w-[40%]'>
-                        <button className='w-[30%] bg-blue-400 text-slate-100 rounded-sm hover:bg-slate-300 hover:text-black transition-all duration-700'>Save</button>
+                        <button className='w-[30%] bg-blue-400 text-slate-100 rounded-sm hover:bg-slate-300 hover:text-black transition-all duration-700' onClick={()=>{add()}}>Save</button>
                         <button className='w-[30%] bg-red-400 text-slate-100 rounded-sm hover:bg-slate-300 hover:text-black transition-all duration-700'>Cancel</button>
                     </div>
                 </div>

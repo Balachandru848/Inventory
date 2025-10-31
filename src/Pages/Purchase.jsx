@@ -28,9 +28,11 @@ function Purchase() {
       return;
     }
     const PurchaseDetail = {
-      Products : rows,
+      Products :rows,
       Total : total,
-      PaymentMethod : online ? "Online" : "Cash",  
+      PaymentMethod : online ? "Online" : "Cash",
+      Date : new Date().toLocaleDateString(),
+      SupplierName : name  
     }
     purchase.push(PurchaseDetail)
     localStorage.setItem("Purchase",JSON.stringify(purchase))
