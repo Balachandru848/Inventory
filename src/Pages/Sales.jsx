@@ -4,21 +4,22 @@ import Title from '../Components/Title'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faXmark} from "@fortawesome/free-solid-svg-icons";
 function Sales() {
-let customer = []
-  if(localStorage.getItem("Customer") === null){
-     customer = []
-  }else{
-    customer = JSON.parse(localStorage.getItem("Customer"))
-  }
 
-let bill = []
-  if(localStorage.getItem("bill") === null){
-     bill = []
-  }else{
-    bill = JSON.parse(localStorage.getItem("bill"))
-  }
-  const Product = JSON.parse(localStorage.getItem("Product"))
-  // console.log(Product);
+const getSafeData = (key) => {
+    try {
+      const data = localStorage.getItem(key);
+      if (!data) return []; // key missing or empty
+      const parsed = JSON.parse(data);
+      return parsed ?? [];  // handle null or invalid
+    } catch (err) {
+      console.error(`Error parsing ${key}:`, err);
+      return [];
+    }
+  };
+  const Product = getSafeData("Product");
+  const bill = getSafeData("bill");
+  const customer = getSafeData("Customer");
+
   
   const [rows,setrows] = useState([{pname:"",quantity:0,price:0,charges:"",subtotal:0}]);
   const [total, settotal] = useState(0)

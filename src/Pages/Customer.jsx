@@ -10,7 +10,20 @@ function Customer() {
   const [showname,setshowname] = useState("");  
   const [shownumber,setshownumber] = useState(0);
 
-  let customer = localStorage.getItem("Customer") ? JSON.parse(localStorage.getItem("Customer")) : [];
+  const getSafeData = (key) => {
+    try {
+      const data = localStorage.getItem(key);
+      if (!data) return []; // key missing or empty
+      const parsed = JSON.parse(data);
+      return parsed ?? [];  // handle null or invalid
+    } catch (err) {
+      console.error(`Error parsing ${key}:`, err);
+      return [];
+    }
+  };
+
+
+  let customer = getSafeData("Customer")
   
   // localStorage.setItem("Customer", JSON.stringify([]));
 

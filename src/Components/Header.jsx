@@ -6,7 +6,18 @@ import { faBars} from "@fortawesome/free-solid-svg-icons";
 function Header() {
      
     const [toggle,settoggle] = useState(false);
-    const name = JSON.parse(localStorage.getItem("userData"))
+    const getSafeData = (key) => {
+    try {
+        const data = localStorage.getItem(key);
+        if (!data) return []; // key missing or empty
+        const parsed = JSON.parse(data);
+        return parsed ?? []; // handle 'null' → []
+        } catch (err) {
+            console.error(`Error parsing ${key}:`, err);
+            return [];
+        }
+    };
+    const name = getSafeData("userData")
     
     const click = () =>{
         settoggle(!toggle)
@@ -30,7 +41,7 @@ function Header() {
                 </ul>
             </div>
             <div className="flex justify-end items-center flex-1 ">
-                <p>{name[0].name}</p>
+                <p>{name?.[0]?.name || "Guest"}</p>
                 {/* <img src="" alt="" /> */}
                 <button className={"h-[20px] px-2 hidden max-[600px]:flex "}onClick={click}><FontAwesomeIcon icon={faBars} /></button>
             </div>

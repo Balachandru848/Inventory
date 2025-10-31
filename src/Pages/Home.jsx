@@ -5,11 +5,22 @@ import { Link } from 'react-router-dom'
 
 
 function Home() {
-  const [counts, setcounts] = useState(1);
-  const totalSales = localStorage.getItem("bill") ? JSON.parse(localStorage.getItem("bill")).length : 0;
-  const totalInventoryitem = localStorage.getItem("Product") ? JSON.parse(localStorage.getItem("Product")).length : 0;
-  const Bill = localStorage.getItem("bill") ? JSON.parse(localStorage.getItem("bill")) : [];
-  const customer = localStorage.getItem("Customer") ? JSON.parse(localStorage.getItem("Customer")) : [];
+  // const [counts, setcounts] = useState(1);
+  const getSafeData = (key) => {
+    try {
+        const data = localStorage.getItem(key);
+        if (!data) return []; // key missing or empty
+        const parsed = JSON.parse(data);
+        return parsed ?? []; // handle 'null' → []
+        } catch (err) {
+            console.error(`Error parsing ${key}:`, err);
+            return [];
+        }
+    };
+  const totalSales = getSafeData("bill").length
+  const totalInventoryitem = getSafeData("Product").length
+  const Bill = getSafeData("bill")
+  // const customer = localStorage.getItem("Customer") ? JSON.parse(localStorage.getItem("Customer")) : [];
   let count = 0
   return (
     <div className='h-[100%]  border-2 border-slate-200 rounded-2xl p-1 shadow-xl'>
@@ -69,6 +80,7 @@ function Home() {
               {
                 Bill.map((bill,index)=>{
                   return(
+                    
                     <tr className='border-2 border-solid border-slate-200'>
                       <td className='text-center py-2'>{index+1}</td>
                       <td className='text-center'>{bill.Products.map((p, i) => (<span key={i}>{p.pname}{i !== bill.Products.length - 1 && ", "}
