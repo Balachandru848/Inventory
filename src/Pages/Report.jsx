@@ -27,10 +27,10 @@ function Report() {
           </div>
           <div className='flex mx-auto justify-evenly w-full h-10'>
             <div className='flex justify-evenly w-[70%]'>
-              <button className='border-2 border-slate-200 rounded-2xl w-[23%] bg-slate-200 hover:bg-green-300' onClick={()=>{setpurchase(false),setsales(true),setstock(false)}}>Sales</button>
-              <button className='border-2 border-slate-200 rounded-2xl w-[23%] bg-slate-200 hover:bg-green-300' onClick={()=>{setpurchase(true),setsales(false),setstock(false)}}>Purchase</button>
+              <button className='border-2 border-slate-200 rounded-2xl w-[23%] bg-slate-200 hover:bg-green-300 max-[600px]:text-[10px]' onClick={()=>{setpurchase(false),setsales(true),setstock(false)}}>Sales</button>
+              <button className='border-2 border-slate-200 rounded-2xl w-[23%] bg-slate-200 hover:bg-green-300 max-[600px]:text-[10px]' onClick={()=>{setpurchase(true),setsales(false),setstock(false)}}>Purchase</button>
               {/* <button className='border-2 border-slate-200 rounded-2xl w-[23%] bg-slate-200 hover:bg-green-300'>Customer</button> */}
-              <button className='border-2 border-slate-200 rounded-2xl w-[23%] bg-slate-200 hover:bg-green-300' onClick={()=>{setpurchase(false),setsales(false),setstock(true)}}>stock</button>
+              <button className='border-2 border-slate-200 rounded-2xl w-[23%] bg-slate-200 hover:bg-green-300 max-[600px]:text-[10px]' onClick={()=>{setpurchase(false),setsales(false),setstock(true)}}>stock</button>
             </div>
           </div>
           <div className='flex justify-center items-center my-2 h-10'>

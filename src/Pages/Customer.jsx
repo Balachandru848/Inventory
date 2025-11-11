@@ -43,12 +43,12 @@ function Customer() {
         <Header/>
         <Title title={"Customer"}/>
         <div className='flex max-[800px]:flex-col'>
-          <div className='flex flex-col w-[20%] max-[800px]:w-[100%]'>
+          <div className={`flex flex-col w-[20%] max-[800px]:w-[100%] max-[800px]:${ bills ? "hidden":""}`} onClick={bill}>
             <div className='flex justify-center px-4'>
               <input type="text" className='   border-2 rounded-lg px-2 border-slate-400 rounded-tr-none rounded-br-none w-[90%] focus:outline-none'/>
               <button className='bg-slate-500 border-2 border-slate-400 border-l-0 rounded-r-lg round text-slate-50'><FontAwesomeIcon icon={faMagnifyingGlass} /></button>
             </div>
-            <div className={`flex flex-col p-4 max-[800px]:${bills?"hidden":""}`} >
+            <div className={`flex flex-col p-4 max-[800px]:${bills?"w-10":""}`} >
               {
                 customer.map((cust,index)=>{
                   return(
@@ -63,7 +63,7 @@ function Customer() {
               }
             </div>
           </div>
-          <div className='flex flex-col w-[80%] max-[800px]:hidden'>
+          <div className='flex flex-col w-[80%] max-[800px]:w-[90%] max-[800px]:mx-auto max-[800px]:my-2 '>
             <div className='border-2 rounded-xl p-2 bg-slate-300 border-white shadow-2xl mb-2 text-xl shadow-slate-400'>
               <h1>{showname}</h1>
               <h1>{shownumber}</h1>

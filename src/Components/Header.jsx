@@ -54,7 +54,7 @@ function Header() {
                     <li className='border-2 border-slate-300 p-1 rounded-2xl m-0.5'><Link to="/Purchase">Purchase</Link></li>
                     <li className='border-2 border-slate-300 p-1 rounded-2xl m-0.5'><Link to="/Customer">Customers</Link></li>
                     <li className='border-2 border-slate-300 p-1 rounded-2xl m-0.5'><Link to="/Report">Report</Link></li>
-                    <li className='border-2 border-slate-300 p-1 rounded-2xl m-0.5'><Link to="/Report">Settings</Link></li>
+                    <li className='border-2 border-slate-300 p-1 rounded-2xl m-0.5'><Link to="/Settings">Settings</Link></li>
                     
                 </ul>
             </div>
